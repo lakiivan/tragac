@@ -81,21 +81,21 @@ def ucitaj_csv(csv_file_name):
         csvreader = csv.reader(csvfile, skipinitialspace=True)
         for row in csvreader:
             part_number = dodaj_nule_ispred_pn(row[0])
-            if row[0] not in poruceno.keys():
+            if part_number not in poruceno.keys():
                 curr_dict = dict()
                 curr_dict['part_number']    = part_number
                 curr_dict['opisi']          = row[1]
                 curr_dict['kolicina']       = row[2]
                 curr_dict['single_cena']    = row[3]
                 curr_dict['ukupna_cena']    = row[4]
-                poruceno[row[0]] = curr_dict
+                poruceno[part_number] = curr_dict
             else:
                 try:
-                    poruceno[row[0]]['kolicina'] = int(poruceno[row[0]]['kolicina']) + int(row[2])
-                    poruceno[row[0]]['ukupna_cena'] = float(poruceno[row[0]]['ukupna_cena']) + float(row[4])
-                    poruceno[row[0]]['part_number'] = part_number
-                    poruceno[row[0]]['opisi'] = row[1]
-                    poruceno[row[0]]['single_cena'] = row[3]
+                    poruceno[part_number]['kolicina'] = int(poruceno[part_number]['kolicina']) + int(row[2])
+                    poruceno[part_number]['ukupna_cena'] = float(poruceno[part_number]['ukupna_cena']) + float(row[4])
+                    poruceno[part_number]['part_number'] = part_number
+                    poruceno[part_number]['opisi'] = row[1]
+                    poruceno[part_number]['single_cena'] = row[3]
                 except:
                     print ("Error bad number format at row:")
                     print (row)
@@ -105,8 +105,8 @@ def ucitaj_csv(csv_file_name):
 def dodaj_nule_ispred_pn(part_number):
     no_zeros = 5 - len(part_number)
     zeros = ''
-    pn = ''
-    if len(part_number) < 5:
+    pn = part_number
+    if no_zeros > 0:
         for dummy_i in range(no_zeros):
             zeros = "0" + zeros
         pn = zeros + part_number
@@ -237,3 +237,10 @@ print('*'*100)
 
 count_ukupno_razlika = razlika_u_kolicini(poruceno, isporuceno)
 print('Razlika je pronadjena u ukupno {0:2d} slucajeva.'.format(count_ukupno_razlika))
+
+# print ('Poruceno keys: ')
+# for pn in poruceno.keys():
+#     print (pn)
+# print ('David keys:  ')
+# for dpn in isporuceno.keys():
+#     print(dpn)

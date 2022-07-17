@@ -37,13 +37,13 @@ def find_kolicine(procitan_text):
         x = re.search("\d+\\.\d{2}", line)
         if x is not None:
             indexes = x.span()
-            print(x.span())
-            print(indexes[0])
+            #print(x.span())
+            #print(indexes[0])
             short_line = line[indexes[0]-5:indexes[0]]
             y = re.search("\d+", short_line)
             if y is not None:
                 kolicine.append(y.group())
-                print (y.group())
+                #print (y.group())
     return kolicine
 
 def find_part_numbers(procitan_text):
@@ -80,21 +80,37 @@ def ucitaj_csv(csv_file_name):
     with open(csv_file_name, 'rt', newline='')  as csvfile:
         csvreader = csv.reader(csvfile, skipinitialspace=True)
         for row in csvreader:
+            part_number = dodaj_nule_ispred_pn(row[0])
             if row[0] not in poruceno.keys():
                 curr_dict = dict()
-                curr_dict['part_number']    = row[0]
+                curr_dict['part_number']    = part_number
                 curr_dict['opisi']          = row[1]
                 curr_dict['kolicina']       = row[2]
                 curr_dict['single_cena']    = row[3]
                 curr_dict['ukupna_cena']    = row[4]
                 poruceno[row[0]] = curr_dict
             else:
-                poruceno[row[0]]['kolicina'] = int(poruceno[row[0]]['kolicina']) + int(row[2])
-                poruceno[row[0]]['ukupna_cena'] = float(poruceno[row[0]]['ukupna_cena']) + float(row[4])
-                poruceno[row[0]]['part_number'] = row[0]
-                poruceno[row[0]]['opisi'] = row[1]
-                poruceno[row[0]]['single_cena'] = row[3]
+                try:
+                    poruceno[row[0]]['kolicina'] = int(poruceno[row[0]]['kolicina']) + int(row[2])
+                    poruceno[row[0]]['ukupna_cena'] = float(poruceno[row[0]]['ukupna_cena']) + float(row[4])
+                    poruceno[row[0]]['part_number'] = part_number
+                    poruceno[row[0]]['opisi'] = row[1]
+                    poruceno[row[0]]['single_cena'] = row[3]
+                except:
+                    print ("Error bad number format at row:")
+                    print (row)
+
     return poruceno
+
+def dodaj_nule_ispred_pn(part_number):
+    no_zeros = 5 - len(part_number)
+    zeros = ''
+    pn = ''
+    if len(part_number) < 5:
+        for dummy_i in range(no_zeros):
+            zeros = "0" + zeros
+        pn = zeros + part_number
+    return pn
 
 def sum_kolicina(poruceno):
     suma = 0.0
@@ -220,4 +236,4 @@ print('{0:<40}{1:3d} part numbera'.format('U isporucenim postoji visak ukupno ',
 print('*'*100)
 
 count_ukupno_razlika = razlika_u_kolicini(poruceno, isporuceno)
-print('Razlika je pronadjena u ukupno {0:2d} slucajeva.'.format(count_ukupno_razlika)) 
+print('Razlika je pronadjena u ukupno {0:2d} slucajeva.'.format(count_ukupno_razlika))

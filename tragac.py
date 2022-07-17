@@ -1,6 +1,7 @@
 import re
 import csv
 
+#************* manipulacija txt podacima, dobijenih iz pdf dokumenta. Radi se o isporucenoj robi
 def procitaj_txt(naziv_txt):
     with open(naziv_txt, encoding="utf-8") as file:
         lines = file.readlines()
@@ -75,6 +76,8 @@ def find_opisi(procitan_text):
             opisi.append(opis)
     return opisi
 
+
+#***************** manipulacija csv podacima, dobijenim iz excel tabele u kojoj se beleze porudbine. Radi se o porucenoj robi
 def ucitaj_csv(csv_file_name):
     poruceno = {}
     with open(csv_file_name, 'rt', newline='')  as csvfile:
@@ -112,6 +115,8 @@ def dodaj_nule_ispred_pn(part_number):
         pn = zeros + part_number
     return pn
 
+
+# obrada dobijenih podataka. Porucenih i isporucenih, njihovo uporedjivanje. Potraga za nedostajucim, viskovima, razlikama...
 def sum_kolicina(poruceno):
     suma = 0.0
     ukupna_kolicina = 0
@@ -178,7 +183,8 @@ def razlika_u_kolicini(poruceno, isporuceno):
                 print('---------------------------------------------------------------------------------')
     return count 
 
-#**********logic********************************
+
+#**********logic  - glavni to programa********************************
 text = procitaj_txt('d.txt')
 #print (text[10])
 print("**********************************")
